@@ -1,0 +1,27 @@
+<html>
+<head>
+<script type="text/javascript" src="dygraph-combined.js"></script>
+<title>CSL Styles</title>
+</head>
+
+<body>
+<div id="graphdiv" style="width:100%"></div>
+<script type="text/javascript">
+g = new Dygraph(
+    document.getElementById("graphdiv"),
+    "output.csv",
+    {
+        title: 'Total and real CSL styles',
+        ylabel: 'CSL styles',
+    }
+    );
+</script>
+
+<ul>
+<li>Updated daily.
+<li>Last update: %LAST_UPDATE%.
+<li>CSL styles from <a href="https://github.com/citation-style-language/styles">https://github.com/citation-style-language/styles</a>
+<li>Total number of styles: %TOTAL_STYLES% (unique: %UNIQUE_STYLES%)
+</ul>
+</body>
+</html>
