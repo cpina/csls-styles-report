@@ -18,7 +18,8 @@ OUTPUT_DIRECTORY='output/'
 
 # Ignores these days because for some reason git shows a smaller number of files (even though
 # for some of them I haven't found any reason).
-days_to_skip = ['2012-10-05', '2013-03-12', '2013-04-06', '2012-07-04', '2012-07-05', '2013-03-13', '2013-05-08', '2013-05-10']
+days_to_skip = ['2012-10-05', '2013-03-12', '2013-04-06', '2012-07-04', '2012-07-05', '2013-03-13', '2013-05-08', '2013-05-10', '2013-08-27']
+# To avoid this: see http://stackoverflow.com/questions/5720343/using-git-show-all-commits-that-exist-only-on-one-specific-branch-and-not-a . Didn't work but should try again.
 
 def execute_git_command(command):
     os.chdir('styles')
