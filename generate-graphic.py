@@ -18,7 +18,7 @@ OUTPUT_DIRECTORY='output/'
 
 # Ignores these days because for some reason git shows a smaller number of files (even though
 # for some of them I haven't found any reason).
-days_to_skip = []
+days_to_skip = ['2013-11-02']
 # To avoid this: see http://stackoverflow.com/questions/5720343/using-git-show-all-commits-that-exist-only-on-one-specific-branch-and-not-a . Didn't work but should try again.
 
 def execute_git_command(command):
@@ -38,7 +38,7 @@ def prepare_repository():
 
 def get_repository_commits():
     os.chdir('styles')
-    commits = commands.getoutput('git rev-list --first-parent master')
+    commits = commands.getoutput('git rev-list --author="\(rmzelle\)\|\(adam3smith\)\|\(Arcus\)" master')
     os.chdir('..')
     commitsList = commits.split('\n')
     commitsList.reverse()
@@ -95,7 +95,7 @@ def create_csv_styles(commits):
     lastDate = 0
     for commit in commits:
         date = get_date_from_commit(commit)
-        if date == None or date < '2011-04-':
+        if date == None or date < '2011-03-03':
             continue
 
         (total, unique_styles) = count_styles(commit)
