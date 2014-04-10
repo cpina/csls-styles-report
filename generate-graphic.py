@@ -34,11 +34,11 @@ def delete_directory(directory):
 
 def prepare_repository():
     delete_directory('styles')
-    os.system('git clone -q https://github.com/citation-style-language/styles')
+    os.system('git clone -q https://github.com/citation-style-language/styles-distribution styles')
 
 def get_repository_commits():
     os.chdir('styles')
-    commits = commands.getoutput('git rev-list --author="\(rmzelle\)\|\(adam3smith\)\|\(Arcus\)" master')
+    commits = commands.getoutput('git rev-list master')
     os.chdir('..')
     commitsList = commits.split('\n')
     commitsList.reverse()
@@ -95,7 +95,7 @@ def create_csv_styles(commits):
     lastDate = 0
     for commit in commits:
         date = get_date_from_commit(commit)
-        if date == None or date < '2011-03-03':
+        if date == None or date < '2014-02-12':
             continue
 
         (total, unique_styles) = count_styles(commit)
