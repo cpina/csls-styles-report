@@ -89,8 +89,8 @@ def update_template(fileName, values):
     f.close()
 
 def create_csv_styles(commits):
-    file = open(OUTPUT_DIRECTORY + '/output.csv', 'w')
-    file.write('Date,Total,Unique\n')
+    shutil.copy('output.csv', OUTPUT_DIRECTORY)
+    file = open(OUTPUT_DIRECTORY + '/output.csv', 'a')
 
     lastDate = 0
     for commit in commits:
