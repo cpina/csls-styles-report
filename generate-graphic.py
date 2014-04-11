@@ -45,18 +45,21 @@ def get_repository_commits():
     return commitsList
 
 def count_styles_from_list(git_output):
-    unique_styles = 0
+    independent_styles = 0
+    dependent_styles = 0
     total = 0
     for line in git_output.split('\n'):
         if not '.csl' in line:
             continue
 
         if line.startswith('dependent/') == False:
-            unique_styles += 1
+            independent_styles += 1
 
         total +=1
 
-    return (total,unique_styles)
+    dependent_styles = total - independent_styles
+    
+    return (total, independent_styles, dependent_styles)
 
 def get_date_from_commit(commit):
     date_git = execute_git_command('show -s --format="%%ci" %s' % (commit))
@@ -73,9 +76,9 @@ def get_date_from_commit(commit):
 
 def count_styles(commit):
     out = execute_git_command('ls-tree -r --name-only %s' % (commit))
-    (total, UniqueStlyes) = count_styles_from_list(out)
+    (total, independent_styles, dependent_styles) = count_styles_from_list(out)
 
-    return (total, UniqueStlyes)
+    return (total, independent_styles, dependent_styles)
 
 def update_template(fileName, values):
     text = open(fileName + '.tmpl','r').read()
@@ -97,11 +100,11 @@ def create_csv_styles(commits):
         if date == None or date < '2014-02-12':
             continue
 
-        (total, unique_styles) = count_styles(commit)
+        (total, independent_styles, dependent_styles) = count_styles(commit)
 
         if lastDate != date:
             if date not in days_to_skip:
-                file.write('%s,%s,%s\n' % (date,total,unique_styles))
+                file.write('%s,%s,%s,%s\n' % (date, total, independent_styles, dependent_styles))
         
         lastDate = date
 
@@ -116,9 +119,9 @@ if __name__ == '__main__':
     create_csv_styles(commits)
     last_commit = commits[-1]
 
-    (total, unique_styles) = count_styles(last_commit)
+    (total, independent_styles, dependent_styles) = count_styles(last_commit)
 
     update_template('index.html',
         {'LAST_UPDATE': datetime.datetime.utcnow().strftime("%Y/%m/%d"),
-        'TOTAL_STYLES': total, 'UNIQUE_STYLES' : unique_styles, 'DEPENDENTS' : total - unique_styles})
+        'TOTAL_STYLES': total, 'UNIQUE_STYLES' : independent_styles, 'DEPENDENTS' : dependent_styles})
     shutil.copy('dygraph-combined.js', OUTPUT_DIRECTORY)
