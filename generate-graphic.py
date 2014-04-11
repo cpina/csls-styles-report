@@ -19,7 +19,6 @@ OUTPUT_DIRECTORY='output/'
 # Ignores these days because for some reason git shows a smaller number of files (even though
 # for some of them I haven't found any reason).
 days_to_skip = ['2013-11-02']
-# To avoid this: see http://stackoverflow.com/questions/5720343/using-git-show-all-commits-that-exist-only-on-one-specific-branch-and-not-a . Didn't work but should try again.
 
 def execute_git_command(command):
     os.chdir('styles')
@@ -120,6 +119,6 @@ if __name__ == '__main__':
     (total, unique_styles) = count_styles(last_commit)
 
     update_template('index.html',
-        {'LAST_UPDATE': "%s, %s" % (datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), last_commit),
-        'TOTAL_STYLES': total, 'UNIQUE_STYLES' : unique_styles})
+        {'LAST_UPDATE': datetime.datetime.utcnow().strftime("%Y/%m/%d"),
+        'TOTAL_STYLES': total, 'UNIQUE_STYLES' : unique_styles, 'DEPENDENTS' : total - unique_styles})
     shutil.copy('dygraph-combined.js', OUTPUT_DIRECTORY)

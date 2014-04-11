@@ -1,27 +1,40 @@
 <html>
 <head>
 <script type="text/javascript" src="dygraph-combined.js"></script>
-<title>CSL Styles</title>
+<title>CSL Style Repository Timeline</title>
 </head>
 
 <body>
-<div id="graphdiv" style="width:100%"></div>
+
+<table style="width:90%; margin:0 auto;"><tr><td width="75%">
+<div id="graphdiv" style="width:100%;"></div>
+</td><td valign=top>
+<div id="legend"></div>
+</td>
+</tr></table>
+
 <script type="text/javascript">
 g = new Dygraph(
     document.getElementById("graphdiv"),
     "output.csv",
     {
-        title: 'Total and real CSL styles',
-        ylabel: 'CSL styles',
+        title: 'CSL repository styles over time',
+        ylabel: 'Styles',
+        labelsDiv: document.getElementById('legend'),
+        labelsSeparateLines: true,
+        legend: 'always'
     }
     );
 </script>
 
 <ul>
-<li>Updated daily.
-<li>Last update: %LAST_UPDATE%.
-<li>CSL styles from <a href="https://github.com/citation-style-language/styles">https://github.com/citation-style-language/styles</a>
-<li>Total number of styles: %TOTAL_STYLES% (unique: %UNIQUE_STYLES%)
+<li>The graph shows the number of <a href="http://citationstyles.org/">Citation Style Language</a> styles in the central <a href="https://github.com/citation-style-language/styles">CSL style repository</a>, and is generated daily with <a href="https://github.com/cpina/csls-styles-report">csls-styles-report</a>.
+<li>Number of styles as of %LAST_UPDATE%
+<ul>
+<li>%TOTAL_STYLES% total
+<li>%UNIQUE_STYLES% independent styles
+<li>%DEPENDENTS% dependent styles
+</ul>
 </ul>
 </body>
 </html>
