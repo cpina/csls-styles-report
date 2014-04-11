@@ -94,19 +94,20 @@ def create_csv_styles(commits):
     shutil.copy('output.csv', OUTPUT_DIRECTORY)
     file = open(OUTPUT_DIRECTORY + '/output.csv', 'a')
 
-    lastDate = 0
-    for commit in commits:
-        date = get_date_from_commit(commit)
+    for i in range(len(commits)):
+        date = get_date_from_commit(commits[i])
         if date == None or date < '2014-02-12':
             continue
 
-        (total, independent_styles, dependent_styles) = count_styles(commit)
+        if i < range(len(commits))[-1]:
+            nextDate = get_date_from_commit(commits[i+1])
+            if date == nextDate:
+                continue
 
-        if lastDate != date:
-            if date not in days_to_skip:
-                file.write('%s,%s,%s,%s\n' % (date, total, independent_styles, dependent_styles))
-        
-        lastDate = date
+        (total, independent_styles, dependent_styles) = count_styles(commits[i])
+
+        if date not in days_to_skip:
+            file.write('%s,%s,%s,%s\n' % (date, total, independent_styles, dependent_styles))
 
     file.close()
 
