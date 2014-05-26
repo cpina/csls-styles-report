@@ -16,20 +16,10 @@ path =  os.path.join(parentFolderPath, 'styles')
 stylesMetadata = []
 styles = []
 
-for stylepath in glob.glob( os.path.join(path, 'z*.csl') ):
+for stylepath in glob.glob( os.path.join(path, '*.csl') ):
     styles.append(os.path.join(stylepath))
-#for stylepath in glob.glob( os.path.join(path, 'dependent', '*.csl') ):
-#    styles.append(os.path.join(stylepath))
-
-# title, id, default-locale, citation-format (1), categories, parent, id, issn, eissn, generated
-
-# os.path.basename(style)
-
-#                "link[@independent-parent]", "link[@template]",
-#                "link[@documentation]", "author", "contributor",
-#                "category[@citation-format]", "category[@field]", "issn",
-#                "eissn", "issnl", "summary", "published", "updated", "rights",
-#                "end-comment"]
+for stylepath in glob.glob( os.path.join(path, 'dependent', '*.csl') ):
+    styles.append(os.path.join(stylepath))
 
 for style in styles:
     styleMetadata = []
@@ -51,11 +41,59 @@ for style in styles:
         title = ""
         pass
 
+    try:
+        parent = csInfo.find(".//{http://purl.org/net/xbiblio/csl}link[@rel='independent-parent']").get("href")
+        parent = parent.split("/styles/")[1]
+    except:
+        parent = ""
+        pass
+
+    try:
+        citationFormat = csInfo.find(".//{http://purl.org/net/xbiblio/csl}category[@citation-format]").get("citation-format")
+    except:
+        citationFormat = ""
+        pass
+
+    try:
+        fieldElements = csInfo.findall(".//{http://purl.org/net/xbiblio/csl}category[@field]")
+        fieldsList = []
+        for field in fieldElements:
+            fieldsList.append(field.get("field"))
+        fields = ";".join(fieldsList)
+    except:
+        fields = ""
+        pass
+
+    try:
+        issn = csInfo.find(".//{http://purl.org/net/xbiblio/csl}issn").text
+    except:
+        issn = ""
+        pass
+
+    try:
+        eissn = csInfo.find(".//{http://purl.org/net/xbiblio/csl}eissn").text
+    except:
+        eissn = ""
+        pass
+
+    try:
+        comment = parsedStyle.xpath("/cs:style/comment()", namespaces={"cs": "http://purl.org/net/xbiblio/csl"})[0]
+        metadataSet = comment.text.split("generate_dependent_styles/data/")[1].strip()
+    except:
+        metadataSet = ""
+        pass
+
     styleID = os.path.basename(style).split(".csl")[0]
 
     styleMetadata.append(title)
     styleMetadata.append(styleID)
     styleMetadata.append(defaultLocale)
+    styleMetadata.append(parent)
+    styleMetadata.append(metadataSet)
+    styleMetadata.append(citationFormat)
+    styleMetadata.append(fields)
+    styleMetadata.append(issn)
+    styleMetadata.append(eissn)
 
     stylesMetadata.append(styleMetadata)
 
