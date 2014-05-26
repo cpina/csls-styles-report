@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>CSL Metadata Table</title>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
+
+    <!-- jQuery -->
+    <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "ajax": 'style-metadata.json',
+                //http://www.datatables.net/examples/api/multi_filter.html
+                //https://datatables.net/forums/discussion/16737/individual-column-filtering-meets-ajax-source
+                "fnInitComplete": function (oSettings, json) {
+                    var table = $('#table_id').DataTable();
+                    $('#table_id tfoot th').each(function () {
+                        $(this).html('<input type="text" placeholder="Search" />');
+                    });
+                    // Apply the filter
+                    $("#table_id tfoot input").on('keyup change', function () {
+                        table
+                            .column($(this).parent().index() + ':visible')
+                            .search(this.value)
+                            .draw();
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>Style Title</th>
+                <th>Style ID</th>
+                <th>Language (default-locale)</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
