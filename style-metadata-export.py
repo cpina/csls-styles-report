@@ -85,19 +85,44 @@ for style in styles:
 
     styleID = os.path.basename(style).split(".csl")[0]
 
-    styleMetadata.append(title)
-    styleMetadata.append(styleID)
-    styleMetadata.append(defaultLocale)
-    styleMetadata.append(parent)
-    styleMetadata.append(metadataSet)
-    styleMetadata.append(citationFormat)
-    styleMetadata.append(fields)
-    styleMetadata.append(issn)
-    styleMetadata.append(eissn)
+    styleMetadata.append(title) #0
+    styleMetadata.append(styleID) #1
+    styleMetadata.append(defaultLocale) #2
+    styleMetadata.append(parent) #3
+    styleMetadata.append(metadataSet) #4
+    styleMetadata.append(citationFormat) #5
+    styleMetadata.append(fields) #6
+    styleMetadata.append(issn) #7
+    styleMetadata.append(eissn) #8
 
     stylesMetadata.append(styleMetadata)
 
-    outputDict = {'data': stylesMetadata};
+outputDict = {'data': stylesMetadata}
 
 with open('style-metadata.json', 'w') as file:
     json.dump(outputDict, file)
+
+parents = {}
+for i in outputDict['data']:
+    if i[3] != "":
+        if i[3] in parents:
+            parents[i[3]].append(i[0])
+        else:
+            parents[i[3]] = [i[0]]
+
+with open('style-parent.json', 'w') as file:
+    json.dump(parents, file)
+
+parentCount = {}
+for i in parents:
+    parentCount[i] = len(parents[i])
+
+sortedParents = sorted(parentCount, key=parentCount.get, reverse=True)
+
+parentOutput = ""
+for i in sortedParents:
+    parentOutput += i + ": " + str(parentCount[i]) + "\n"
+
+f = open('style-parent-count.txt', 'w')
+f.write ( parentOutput )
+f.close()
