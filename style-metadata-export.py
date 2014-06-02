@@ -102,9 +102,10 @@ outputDict = {'data': stylesMetadata}
 with open('style-metadata.json', 'w') as file:
     json.dump(outputDict, file)
 
+# Limit ourselves to non-generated styles
 parents = {}
 for i in outputDict['data']:
-    if i[3] != "":
+    if i[3] != "" and i[4] == "":
         if i[3] in parents:
             parents[i[3]].append(i[0])
         else:
@@ -126,3 +127,40 @@ for i in sortedParents:
 f = open('style-parent-count.txt', 'w')
 f.write ( parentOutput )
 f.close()
+
+# Count of auto-generated styles
+metadataSets = {}
+for i in outputDict['data']:
+    if i[4] != "":
+        if i[4] in metadataSets:
+            metadataSets[i[4]].append(i[0])
+        else:
+            metadataSets[i[4]] = [i[0]]
+
+# Rename metadata sets
+publishersPath =  os.path.join(parentFolderPath, 'utilities', 'generate_dependent_styles', 'data', 'publishers.json')
+with open(publishersPath) as publisherNamesJSON:
+    publisherNames = json.load(publisherNamesJSON)
+
+for i in publisherNames:
+    if i in metadataSets:
+        metadataSets[publisherNames[i]] = metadataSets.pop(i)
+
+metadataSetsCount = {}
+for i in metadataSets:
+    metadataSetsCount[i] = len(metadataSets[i])
+
+sortedMetadataSets = sorted(metadataSetsCount, key=metadataSetsCount.get, reverse=True)
+
+metadataSetsOutput = ""
+totalGeneratedStyles = 0
+for i in sortedMetadataSets:
+    metadataSetsOutput += i + ": " + str(metadataSetsCount[i]) + "\n"
+    totalGeneratedStyles += metadataSetsCount[i]
+
+metadataSetsOutput = "Total: " + str(totalGeneratedStyles) + "\n===\n" + metadataSetsOutput
+
+f = open('style-metadatasets-count.txt', 'w')
+f.write ( metadataSetsOutput )
+f.close()
+
