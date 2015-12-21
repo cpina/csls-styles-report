@@ -125,4 +125,3 @@ if __name__ == '__main__':
     update_template('index.html',
         {'LAST_UPDATE': datetime.datetime.utcnow().strftime("%Y/%m/%d"),
         'TOTAL_STYLES': total, 'UNIQUE_STYLES' : independent_styles, 'DEPENDENTS' : dependent_styles})
-    shutil.copy('dygraph-combined.js', OUTPUT_DIRECTORY)
