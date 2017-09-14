@@ -1,8 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-import commands
 import datetime
-import dateutil.parser
 import glob
 import os
 import shutil
@@ -22,7 +20,7 @@ days_to_skip = ['2013-11-02']
 
 def execute_git_command(command):
     os.chdir('styles')
-    command_output = commands.getoutput('git ' + command)
+    command_output = subprocess.getoutput('git ' + command)
     os.chdir('..')
 
     return command_output
@@ -37,7 +35,7 @@ def prepare_repository():
 
 def get_repository_commits():
     os.chdir('styles')
-    commits = commands.getoutput('git rev-list master')
+    commits = subprocess.getoutput('git rev-list master')
     os.chdir('..')
     commitsList = commits.split('\n')
     commitsList.reverse()
@@ -70,7 +68,7 @@ def get_date_from_commit(commit):
         # git show doesn't return anything useful?
         return None
 
-    date = dateutil.parser.parse(date_git)
+    date = datetime.datetime.strptime(date_git, "%Y-%m-%d %H:%S:%M %z")
 
     return date.strftime('%Y-%m-%d')
 
